@@ -133,3 +133,145 @@ CREATE TABLE volar(
 	vol char(9),
 	seient tinyint
 )CHARACTER SET utf8mb4;
+
+-- Incloure clau primaria a les taules 
+
+alter table companyia 
+add constraint pk_companyia primary key (nom);
+
+alter table personal
+add constraint pk_personal primary key (num_empleat);
+
+alter table avio
+add constraint pk_avio primary key (num_serie);
+
+alter table passatger
+add constraint pk_passatger primary key (passaport);
+
+alter table aeroport
+add constraint pk_aeroport primary key (codi);
+
+alter table mostrador
+add constraint pk_mostrador primary key (numero);
+
+alter table vol
+add constraint pk_vol primary key (codi);
+
+
+-- Inclore frogein clau a les taules
+alter table companyia
+add constraint fk_companyia
+foreign key (filial_de)
+references companyia(nom)
+on delete restrict
+on update cascade;
+
+alter table hostessa
+add constraint fk_hostessa_personal
+foreign key (num_empleat)
+references personal(num_empleat)
+on delete cascade
+on update cascade;
+
+alter table pilot
+add constraint fk_pilot_personal
+foreign key (num_empleat)
+references personal(num_empleat)
+on delete cascade
+on update cascade;
+
+alter table avio
+add constraint fk_avio_companyia
+foreign key (companyia)
+references companyia(nom)
+on delete restrict
+on update cascade;
+
+alter table mostrador
+add constraint fk_mostrador_aeroport
+foreign key (codi_aeroport)
+references aeroport(codi)
+on delete cascade
+on update cascade;
+
+alter table vol
+add constraint fk_vol_aeroport_origen
+foreign key (aeroport_origen)
+references aeroport(codi)
+on delete restrict
+on update cascade;
+
+alter table vol
+add constraint fk_vol_aeroport_desti
+foreign key (aeroport_desti)
+references aeroport(codi)
+on delete restrict
+on update cascade;
+
+alter table vol
+add constraint fk_vol_avio
+foreign key (avio)
+references avio(num_serie)
+on delete restrict
+on update cascade;
+
+alter table vol
+add constraint fk_vol_hostessa
+foreign key (hostessa)
+references hostessa(num_empleat)
+on delete restrict
+on update cascade;
+
+alter table vol
+add constraint fk_vol_pilot
+foreign key (pilot)
+references pilot(num_empleat)
+on delete restrict
+on update cascade;
+
+alter table volar
+add constraint fk_volar_passatger
+foreign key (passatger)
+references passatger(passaport)
+on delete restrict
+on update cascade;
+
+alter table volar
+add constraint fk_volar_vol
+foreign key (vol)
+references vol(codi)
+on delete restrict
+on update cascade;
+
+-- restricions de les taules
+-- El seient és un número entre 1 i 200.
+alter table volar
+add constraint ch_seint check (seient >= 1 and seient <= 200);
+
+-- El número de passaport del personal no es pot repetir.
+add alter personal
+add constraint no_repetit num_empleat unique;
+
+-- El tipus d’avió pot valer només COM-PAS, JET, o CARGO.
+add alter avio
+add constraint tipus_enm tipus enum ('COM-PAS', 'JET', 'ARGO');
+
+-- La descripció del vol pot valer només ON-TIME, DELAYED, o UNKNOWN.
+add alter vol
+add constraint vol_enm descripcio enum ('ON_TIME', 'DELAYED', 'UNKNOWN');
+
+-- Per ser pilot s’han de tenir com a mínim 400 hores de vol.
+add alter pilot
+add constraint pilot_hr check (hores >= 400);
+
+-- La durada dels vols ha de ser un valor entre 10 i 1200.
+alter table vol
+add constraint durada_ch check (time >= 10 or time <= 1200);
+
+-- El sou no pot ser negatiu. A més el sou mínim ha de ser de 20.000 dolars.
+alter table personal
+add constraint sou_ch check (sou > 0 and sou >= 20.000);
+
+-- El codi IATA dels aeroports no es pot repetir.
+alter table aeroport
+add constraint codi_uni codi unique;
