@@ -264,6 +264,10 @@ add constraint vol_enm descripcio enum ('ON_TIME', 'DELAYED', 'UNKNOWN');
 add alter pilot
 add constraint pilot_hr check (hores >= 400);
 
+--En un vol un seient no pot estar ocupat per més d’una persona.
+add alter volar 
+add constraint unic_seient_vol unique (vol, seient);
+
 -- La durada dels vols ha de ser un valor entre 10 i 1200.
 alter table vol
 add constraint durada_ch check (time >= 10 or time <= 1200);
