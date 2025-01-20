@@ -134,7 +134,7 @@ CREATE TABLE volar(
 	seient tinyint
 )CHARACTER SET utf8mb4;
 
--- Incloure clau primaria a les taules 
+-- Claus primarias en la taules 
 
 alter table companyia 
 add constraint pk_companyia primary key (nom);
@@ -157,6 +157,42 @@ add constraint pk_mostrador primary key (numero);
 alter table vol
 add constraint pk_vol primary key (codi);
 
+-- restricions de les taules
+-- El seient és un número entre 1 i 200.
+alter table volar
+add constraint asiento_ch check (seient >= 1 and seient <= 200);
+
+-- El número de passaport del personal no es pot repetir.
+-- Ya esta 
+
+-- El tipus d’avió pot valer només COM-PAS, JET, o CARGO.
+ALTER TABLE avio
+ADD CONSTRAINT tipus_check CHECK (tipus IN ('COM-PAS', 'JET', 'CARGO'));
+
+-- La descripció del vol pot valer només ON-TIME, DELAYED, o UNKNOWN.
+ALTER TABLE vol
+ADD CONSTRAINT vol_descripcio_check CHECK (descripcio IN ('ON_TIME', 'DELAYED', 'UNKNOWN'));
+
+-- Per ser pilot s’han de tenir com a mínim 400 hores de vol.
+add alter pilot
+add constraint pilot_pilot check (hores >= 400);
+
+-
+-- Agregar restricción para que un asiento no pueda estar ocupado por más de un pasajero en el mismo vuelo
+ALTER TABLE volar
+ADD CONSTRAINT unique_seient_per_vol UNIQUE (vol, seient);
+
+-- La durada dels vols ha de ser un valor entre 10 i 1200.
+alter table vol
+add constraint durada_duarda check (time >= 10 or time <= 1200);
+
+-- El sou no pot ser negatiu. A més el sou mínim ha de ser de 20.000 dolars.
+alter table personal
+add constraint sou_sou check (sou > 0 and sou >= 20.000);
+
+-- El codi IATA dels aeroports no es pot repetir.
+alter table aeroport
+add constraint codi_codi codi unique;
 
 -- Inclore frogein clau a les taules
 alter table companyia
@@ -242,36 +278,3 @@ foreign key (vol)
 references vol(codi)
 on delete restrict
 on update cascade;
-
--- restricions de les taules
--- El seient és un número entre 1 i 200.
-alter table volar
-add constraint ch_seint check (seient >= 1 and seient <= 200);
-
--- El número de passaport del personal no es pot repetir.
-add alter personal
-add constraint no_repetit num_empleat unique;
-
--- El tipus d’avió pot valer només COM-PAS, JET, o CARGO.
-add alter avio
-add constraint tipus_enm tipus enum ('COM-PAS', 'JET', 'ARGO');
-
--- La descripció del vol pot valer només ON-TIME, DELAYED, o UNKNOWN.
-add alter vol
-add constraint vol_enm descripcio enum ('ON_TIME', 'DELAYED', 'UNKNOWN');
-
--- Per ser pilot s’han de tenir com a mínim 400 hores de vol.
-add alter pilot
-add constraint pilot_hr check (hores >= 400);
-
--- La durada dels vols ha de ser un valor entre 10 i 1200.
-alter table vol
-add constraint durada_ch check (time >= 10 or time <= 1200);
-
--- El sou no pot ser negatiu. A més el sou mínim ha de ser de 20.000 dolars.
-alter table personal
-add constraint sou_ch check (sou > 0 and sou >= 20.000);
-
--- El codi IATA dels aeroports no es pot repetir.
-alter table aeroport
-add constraint codi_uni codi unique;
