@@ -3,7 +3,7 @@
     CFGS Desenvolupament d'Aplicacions Multiplataforma 
     CFGS Desenvolupament d'Aplicacions Web 
     Mòdul: 0484 Bases de dades. 
-    AUTOR: Jordi Quesada Balaguer
+    AUTOR: Akasha Karam Y Karen 
     DATA: Gener 2025
 ****************************************************** */
 
@@ -164,6 +164,7 @@ add constraint asiento_ch check (seient >= 1 and seient <= 200);
 
 -- El número de passaport del personal no es pot repetir.
 -- Ya esta 
+
 
 -- El tipus d’avió pot valer només COM-PAS, JET, o CARGO.
 ALTER TABLE avio
