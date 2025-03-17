@@ -10,25 +10,27 @@
 -- problema 1
 select nom,ICAO from companyia 
 where pais ="Spain"
-or by ICAO; 
+order by ICAO; 
 
 -- problema 2
 -- Dudas sobre el boeing
 select  num_serie,fabricant,any_fabricacio as any ,companyia 
-from avio where fabricant not like 'Boeing' 
+from avio where fabricant not like 'Boeing%' 
 and any_fabricacio >= 2020 
 order by any_fabricacio,fabricant,num_serie;
 
 -- problema 3
 select (concat('L''aeroport ', nom, ' està a ', ciutat, ' i va ser construït l’any ', any_construccio)) 
-as aeroport from aeroport  
+as aeroporto from aeroport  
 where  pais='Spain' order by nom;
 
 
 -- problema 4
 select nom,pais, char_length(nom) as longitud
-from aeroport where char_length(nom)>= 7 and char_length(nom) <=9 
-and nom like '%e%e%e%' order by  longitud,pais;
+from aeroport 
+where char_length(nom) between 7 and 9 
+and nom like '%e%e%e%' 
+order by  longitud desc,pais;
 
 -- Pregunta 5
 select num_serie from avio where (fabricant like 'Concorde' 
@@ -64,7 +66,7 @@ order by
 
 select nom,cognom,telefon,data_naix 
 from passatger
-where year(curdate()) - year(data_naix) = 54 and 55
+where year(curdate()) - year(data_naix) IN (54, 55)
 and telefon % 2 = 1
 and adreca is null 
 order by data_naix asc ,nom asc;
