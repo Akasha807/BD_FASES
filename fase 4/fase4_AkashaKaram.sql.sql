@@ -3,7 +3,7 @@
     CFGS DAM 
     Mòdul: 0484 Bases de dades. 
     AUTORS: Akasha Karam
-    DATA: ________________
+    DATA: 17/3/25
 ****************************************************** */
 
 -- Pregunta 1
@@ -65,23 +65,24 @@ ORDER BY vol.avio, vol.data, vol.codi;
 -- Tipo Recursiva 
 -- La hostessa no tiene cognom ni nom
 -- Vacio 
+-- vol y volar
+-- 2
+7
 SELECT 
-    (SELECT CONCAT(p.cognom, ', ', p.nom) 
-     FROM passatger p 
-     WHERE p.passaport = volar.passatger) AS passatger,
-    CONCAT(vol.hostessa, ', Hostessa') AS hostessa,
+    CONCAT(passatger.cognom, ', ', passatger.nom) AS passatger,
+    CONCAT(hostessa.num_empleat, ', Hostessa') AS hostessa,
     vol.aeroport_origen,
     vol.aeroport_desti,
     vol.durada
-FROM vol, volar, passatger, aeroport A, aeroport B
-WHERE vol.codi = volar.vol
-AND volar.passatger = passatger.passaport
+FROM vol, passatger, hostessa, aeroport A, aeroport B, volar
+WHERE vol.hostessa = hostessa.num_empleat
 AND vol.aeroport_origen = A.codi
 AND vol.aeroport_desti = B.codi
-AND A.ciutat = 'Madrid'
+AND vol.codi=volar.vol
+AND passatger.passaport = volar.passatger
+AND passatger.adreca LIKE '%Madrid%' 
 AND vol.data = '2023-12-25'
 ORDER BY passatger.cognom;
-
 
 
 -- Pregunta 5
@@ -108,9 +109,10 @@ ORDER BY vol.codi;
 -- passatger 
 -- vol 
 -- Recursiva filial_de
+-- 142 
 SELECT 
     c1.nom AS companyia,
-    c2.nom AS companyia_mare,
+    COALESCE(c2.nom, '-') AS companyia_mare,  -- Si no hay matriz, muestra "-"
     CONCAT(pilot.cognom, ', ', pilot.nom) AS pilot,
     CONCAT(hostessa.cognom, ', ', hostessa.nom) AS hostessa
 FROM vol
@@ -132,8 +134,9 @@ SELECT
     C1.nom AS companyia,
     COALESCE(C2.nom, '-') AS companyia_mare
 FROM companyia C1
-LEFT JOIN companyia C2 ON C1.filial_de = C2.nom
-ORDER BY C1.nom;
+LEFT JOIN companyia C1 ON C2.nom = C1.filial_de
+ORDER BY C1.filial_de;
+
 
 -- Pregunta 8
 select 'No ho sé';
